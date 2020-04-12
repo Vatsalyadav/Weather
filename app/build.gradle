@@ -32,4 +32,9 @@ dependencies {
     // Gson
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
 
+
+    // Lifecycle components
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.2.0'
+    annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.2.0'
+
 }
