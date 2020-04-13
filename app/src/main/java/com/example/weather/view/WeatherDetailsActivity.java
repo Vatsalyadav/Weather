@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.example.weather.R;
 import com.example.weather.models.Location;
+import com.example.weather.models.WeatherDetails;
 import com.example.weather.viewmodels.WeatherDetailsActivityViewModel;
 
 import androidx.annotation.NonNull;
@@ -57,6 +58,18 @@ public class WeatherDetailsActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable Location location) {
                 Log.e(TAG, "onChanged: " + location.getLatitude() + "  " + location.getLongitude());
+                if (location.getLatitude() != 0.0 && location.getLongitude() != 0)
+                    fetchWeatherData();
+            }
+        });
+    }
+
+    private void fetchWeatherData() {
+        mWeatherDetailsActivityViewModel.setWeatherDetails();
+        mWeatherDetailsActivityViewModel.getWeatherDetails().observe(this, new Observer<WeatherDetails>() {
+            @Override
+            public void onChanged(@Nullable WeatherDetails weatherDetails) {
+                Log.e(TAG, "fetchWeatherData: " + weatherDetails.getResponseState() + "  ");
             }
         });
     }
