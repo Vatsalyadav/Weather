@@ -27,6 +27,16 @@ public class WeatherDetails {
     @Expose
     private List<Daily> daily = null;
 
+    private String responseState;
+
+    public String getResponseState() {
+        return responseState;
+    }
+
+    public void setResponseState(String responseState) {
+        this.responseState = responseState;
+    }
+
     public Double getLat() {
         return lat;
     }
