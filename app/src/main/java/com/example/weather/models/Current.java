@@ -46,6 +46,9 @@ public class Current {
     @SerializedName("weather")
     @Expose
     private List<Weather> weather = null;
+    @SerializedName("visibility")
+    @Expose
+    private Integer visibility;
 
     public Integer getDt() {
         return dt;
@@ -61,6 +64,14 @@ public class Current {
 
     public void setSunrise(Integer sunrise) {
         this.sunrise = sunrise;
+    }
+
+    public Integer getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(Integer visibility) {
+        this.visibility = visibility;
     }
 
     public Integer getSunset() {

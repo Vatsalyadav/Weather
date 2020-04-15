@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.weather.R;
@@ -124,7 +125,6 @@ public class WeatherDetailsActivity extends AppCompatActivity {
         mWeatherDetailsActivityViewModel.getWeatherDetails().observe(this, new Observer<WeatherDetails>() {
             @Override
             public void onChanged(@Nullable WeatherDetails weatherDetails) {
-                Log.e(TAG, "fetchWeatherData: " + weatherDetails.getResponseState() + " temp  " + weatherDetails.getTimezone());
                 if (weatherDetails.getResponseState()) {
                     updateUI(weatherDetails);
                 }
@@ -157,7 +157,7 @@ public class WeatherDetailsActivity extends AppCompatActivity {
         int i = 0;
         for (Hourly hour : hourlyData) {
             yAxisValHour.add(new Entry(i, (hour.getTemp()).floatValue()));
-            xLabelHour.add(getHour(hour.getDt()));
+            xLabelHour.add(formatTime(hour.getDt(), "HH:mm"));
             i++;
         }
         setTemperatureChart(xLabelHour, yAxisValHour, null, hourlyTempChart);
@@ -171,7 +171,7 @@ public class WeatherDetailsActivity extends AppCompatActivity {
         for (Daily daily : dailyData) {
             yaxisValMin.add(new Entry(i, (daily.getTemp().getMin()).floatValue()));
             yaxisValMax.add(new Entry(i, (daily.getTemp().getMax()).floatValue()));
-            xLabelWeek.add(getDay(daily.getDt()));
+            xLabelWeek.add(formatTime(daily.getDt(), "EEE"));
             i++;
         }
         setTemperatureChart(xLabelWeek, yaxisValMin, yaxisValMax, weeklyTempChart);
@@ -179,7 +179,42 @@ public class WeatherDetailsActivity extends AppCompatActivity {
     }
 
     private void setWeatherDetailsUI(WeatherDetails weatherDetails) {
+        TextView currentTemperatureText = findViewById(R.id.current_temperature);
+        TextView weatherDescText = findViewById(R.id.weather_desc);
+        TextView windSpeedText = findViewById(R.id.wind_speed);
+        TextView humidityText = findViewById(R.id.humidity);
+        TextView uvText = findViewById(R.id.uv_index);
+        TextView pressureText = findViewById(R.id.pressure);
+        TextView visibilityText = findViewById(R.id.visibility);
+        TextView cloudCoverText = findViewById(R.id.cloud_cover);
+        TextView dewPointText = findViewById(R.id.dew_point);
+        TextView refreshTimeText = findViewById(R.id.refresh_time);
 
+        String currentTemperature, weatherDesc, windSpeed, humidity, uvIndex, pressure,
+                visibility, cloudCover, dewPoint, refreshTime;
+        currentTemperature = weatherDetails.getCurrent().getTemp() + "\u00B0";
+        weatherDesc = weatherDetails.getCurrent().getWeather().get(0).getMain() +
+                ", Feels Like " + String.format(Locale.US, "%.1f", weatherDetails.getCurrent().getFeelsLike())
+                + "\u00B0C";
+        windSpeed = weatherDetails.getCurrent().getWindSpeed() + " km/hr";
+        humidity = weatherDetails.getCurrent().getHumidity() + "%";
+        uvIndex = weatherDetails.getCurrent().getUvi() + "";
+        pressure = weatherDetails.getCurrent().getPressure() + " mb";
+        visibility = weatherDetails.getCurrent().getVisibility() / 1000 + " km";
+        cloudCover = weatherDetails.getCurrent().getClouds() + "%";
+        dewPoint = String.format(Locale.US, "%.1f", weatherDetails.getCurrent().getDewPoint()) + "\u00B0C";
+        refreshTime = "Refresh at " + formatTime(weatherDetails.getCurrent().getDt(), "hh:mm aa");
+
+        currentTemperatureText.setText(currentTemperature);
+        weatherDescText.setText(weatherDesc);
+        windSpeedText.setText(windSpeed);
+        humidityText.setText(humidity);
+        uvText.setText(uvIndex);
+        pressureText.setText(pressure);
+        visibilityText.setText(visibility);
+        cloudCoverText.setText(cloudCover);
+        dewPointText.setText(dewPoint);
+        refreshTimeText.setText(refreshTime);
     }
 
 
@@ -250,16 +285,10 @@ public class WeatherDetailsActivity extends AppCompatActivity {
         xAxis.setAvoidFirstLastClipping(true);
     }
 
-    private String getHour(long time) {
+    private String formatTime(long time, String dateFormat) {
         Calendar cal = Calendar.getInstance(Locale.ENGLISH);
         cal.setTimeInMillis(time * 1000);
-        return DateFormat.format("HH:mm", cal).toString();
-    }
-
-    private String getDay(long time) {
-        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-        cal.setTimeInMillis(time * 1000);
-        return DateFormat.format("EEE", cal).toString();
+        return DateFormat.format(dateFormat, cal).toString();
     }
 
 }
