@@ -43,7 +43,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/pacifico"
                 android:paddingLeft="8dp"
-                android:text="24*"
+                android:paddingRight="8dp"
+                android:text="@string/loading"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3" />
 
 
@@ -53,8 +54,9 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/bree_serif"
                 android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:paddingBottom="4dp"
-                android:text="Partly Cloudy, Feels Like 26*"
+                android:text="@string/details_loading"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6" />
 
             <androidx.cardview.widget.CardView
@@ -75,7 +77,8 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/bree_serif"
                         android:paddingLeft="8dp"
-                        android:text="Hourly Forecast"
+                        android:paddingRight="8dp"
+                        android:text="@string/hourly_forecast"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                         android:textColor="@android:color/darker_gray" />
 
@@ -117,16 +120,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingLeft="8dp"
-                            android:text="Refresh at 2:50 AM"
+                            android:id="@+id/refresh_time"
+                            android:paddingRight="8dp"
+                            android:text="@string/details_loading"
                             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
                     </LinearLayout>
-
-                    <!--                    <TextView-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:text="Details"-->
-                    <!--                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />-->
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -143,19 +142,19 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_toRightOf="@id/icon_wind"
+                            android:layout_toEndOf="@id/icon_wind"
                             android:orientation="vertical"
-                            android:paddingLeft="16dp">
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp">
 
                             <TextView
                                 android:id="@+id/wind_speed_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:gravity="bottom"
-                                android:text="Wind Speed"
+                                android:text="@string/wind_speed"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
                             <TextView
@@ -163,9 +162,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@id/wind_speed_text"
-                                android:layout_weight="1"
                                 android:gravity="top"
-                                android:text="27 km/hr"
+                                android:text="@string/details_loading"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                                 android:textColor="@color/colorAccent" />
 
@@ -187,19 +185,19 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_toRightOf="@id/icon_humidity"
+                            android:layout_toEndOf="@id/icon_humidity"
                             android:orientation="vertical"
-                            android:paddingLeft="16dp">
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp">
 
                             <TextView
                                 android:id="@+id/humidity_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:gravity="bottom"
-                                android:text="Humidity"
+                                android:text="@string/humidity"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
                             <TextView
@@ -207,9 +205,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@id/humidity_text"
-                                android:layout_weight="1"
                                 android:gravity="top"
-                                android:text="73%"
+                                android:text="@string/details_loading"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                                 android:textColor="@color/colorAccent" />
 
@@ -231,19 +228,19 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_toRightOf="@id/icon_uv"
+                            android:layout_toEndOf="@id/icon_uv"
                             android:orientation="vertical"
-                            android:paddingLeft="16dp">
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp">
 
                             <TextView
                                 android:id="@+id/uv_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:gravity="bottom"
-                                android:text="UV Index"
+                                android:text="@string/uv_index"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
                             <TextView
@@ -251,9 +248,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@id/uv_text"
-                                android:layout_weight="1"
                                 android:gravity="top"
-                                android:text="0 Low"
+                                android:text="@string/details_loading"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                                 android:textColor="@color/colorAccent" />
 
@@ -275,19 +271,19 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_toRightOf="@id/icon_pressure"
+                            android:layout_toEndOf="@id/icon_pressure"
                             android:orientation="vertical"
-                            android:paddingLeft="16dp">
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp">
 
                             <TextView
                                 android:id="@+id/text_pressure"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:gravity="bottom"
-                                android:text="Atmospheric Pressure"
+                                android:text="@string/atmospheric_pressure"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
                             <TextView
@@ -295,12 +291,10 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@id/text_pressure"
-                                android:layout_weight="1"
                                 android:gravity="top"
-                                android:text="1007 mb"
+                                android:text="@string/details_loading"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                                 android:textColor="@color/colorAccent" />
-
                         </RelativeLayout>
                     </RelativeLayout>
 
@@ -319,19 +313,19 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_toRightOf="@id/icon_visibility"
+                            android:layout_toEndOf="@id/icon_visibility"
                             android:orientation="vertical"
-                            android:paddingLeft="16dp">
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp">
 
                             <TextView
                                 android:id="@+id/visibility_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:gravity="bottom"
-                                android:text="Visibility"
+                                android:text="@string/visibility"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
                             <TextView
@@ -339,9 +333,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@id/visibility_text"
-                                android:layout_weight="1"
                                 android:gravity="top"
-                                android:text="4.80 km"
+                                android:text="@string/details_loading"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                                 android:textColor="@color/colorAccent" />
 
@@ -363,19 +356,19 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_toRightOf="@id/icon_cloud_cover"
+                            android:layout_toEndOf="@id/icon_cloud_cover"
                             android:orientation="vertical"
-                            android:paddingLeft="16dp">
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp">
 
                             <TextView
                                 android:id="@+id/cloud_cover_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:gravity="bottom"
-                                android:text="Cloud Cover"
+                                android:text="@string/cloud_cover"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
                             <TextView
@@ -383,9 +376,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@id/cloud_cover_text"
-                                android:layout_weight="1"
                                 android:gravity="top"
-                                android:text="40%"
+                                android:text="@string/details_loading"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                                 android:textColor="@color/colorAccent" />
 
@@ -398,38 +390,37 @@
                         android:padding="4dp">
 
                         <ImageView
-                            android:id="@+id/icon_rain"
+                            android:id="@+id/icon_dew_point"
                             android:layout_width="28dp"
                             android:layout_height="28dp"
-                            android:src="@drawable/ic_rain" />
+                            android:src="@drawable/ic_dew_point" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentTop="true"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_alignParentBottom="true"
-                            android:layout_toRightOf="@id/icon_rain"
+                            android:layout_toEndOf="@id/icon_dew_point"
                             android:orientation="vertical"
-                            android:paddingLeft="16dp">
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp">
 
                             <TextView
-                                android:id="@+id/rain_text"
+                                android:id="@+id/dew_point_text"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:gravity="bottom"
-                                android:text="Rain"
+                                android:text="@string/dew_point"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
 
                             <TextView
-                                android:id="@+id/rain_index"
+                                android:id="@+id/dew_point"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@id/rain_text"
-                                android:layout_weight="1"
+                                android:layout_below="@id/dew_point_text"
                                 android:gravity="top"
-                                android:text="40%"
+                                android:text="@string/details_loading"
                                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                                 android:textColor="@color/colorAccent" />
 
@@ -480,7 +471,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/bree_serif"
                     android:paddingLeft="8dp"
-                    android:text="Weekly Forecast"
+                    android:paddingRight="8dp"
+                    android:text="@string/weekly_forecast"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                     android:textColor="@android:color/darker_gray" />
 
@@ -524,7 +516,7 @@
             android:layout_height="55dp"
             android:layout_margin="1dp"
             android:onClick="weeklyForecast"
-            android:text="Show Weekly Forecast"
+            android:text="@string/show_weekly_forecast"
             app:cornerRadius="0dp"
             app:iconPadding="8dp"
             app:rippleColor="@color/colorAccent" />
