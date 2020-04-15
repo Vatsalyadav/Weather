@@ -72,7 +72,7 @@ public class WeatherDetailsRepository {
             @Override
             public void onResponse(Call<WeatherDetails> call, Response<WeatherDetails> response) {
                 if (!response.isSuccessful()) {
-                    weatherDetails.setResponseState("FAILED");
+                    weatherDetails.setResponseState(false);
                     weatherData.setValue(weatherDetails);
                     return;
                 }
@@ -82,7 +82,7 @@ public class WeatherDetailsRepository {
 
             @Override
             public void onFailure(Call<WeatherDetails> call, Throwable t) {
-                weatherDetails.setResponseState("FAILED");
+                weatherDetails.setResponseState(false);
                 weatherData.setValue(weatherDetails);
             }
         });

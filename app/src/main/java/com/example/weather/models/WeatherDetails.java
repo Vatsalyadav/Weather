@@ -27,13 +27,13 @@ public class WeatherDetails {
     @Expose
     private List<Daily> daily = null;
 
-    private String responseState;
+    private Boolean responseState = true;
 
-    public String getResponseState() {
+    public Boolean getResponseState() {
         return responseState;
     }
 
-    public void setResponseState(String responseState) {
+    public void setResponseState(Boolean responseState) {
         this.responseState = responseState;
     }
 

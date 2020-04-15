@@ -2,14 +2,38 @@ package com.example.weather.view;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.transition.Slide;
+import android.transition.Transition;
+import android.transition.TransitionManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.weather.R;
+import com.example.weather.models.Daily;
+import com.example.weather.models.Hourly;
 import com.example.weather.models.Location;
 import com.example.weather.models.WeatherDetails;
 import com.example.weather.viewmodels.WeatherDetailsActivityViewModel;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.google.android.material.button.MaterialButton;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,15 +88,7 @@ public class WeatherDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchWeatherData() {
-        mWeatherDetailsActivityViewModel.setWeatherDetails();
-        mWeatherDetailsActivityViewModel.getWeatherDetails().observe(this, new Observer<WeatherDetails>() {
-            @Override
-            public void onChanged(@Nullable WeatherDetails weatherDetails) {
-                Log.e(TAG, "fetchWeatherData: " + weatherDetails.getResponseState() + "  ");
-            }
-        });
-    }
+    private Boolean showWeeklyForecast = true;
 
     private void initWeatherDetailsViewModel() {
         try {
@@ -99,6 +115,151 @@ public class WeatherDetailsActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
+
+    private LineChart hourlyTempChart, weeklyTempChart;
+
+    private void fetchWeatherData() {
+        mWeatherDetailsActivityViewModel.setWeatherDetails();
+        mWeatherDetailsActivityViewModel.getWeatherDetails().observe(this, new Observer<WeatherDetails>() {
+            @Override
+            public void onChanged(@Nullable WeatherDetails weatherDetails) {
+                Log.e(TAG, "fetchWeatherData: " + weatherDetails.getResponseState() + " temp  " + weatherDetails.getTimezone());
+                if (weatherDetails.getResponseState()) {
+                    updateUI(weatherDetails);
+                }
+            }
+        });
+    }
+
+    public void weeklyForecast(View view) {
+        View redLayout = findViewById(R.id.hidden_forecast_layout);
+        ViewGroup parent = findViewById(R.id.parent_layout_picture_details);
+        MaterialButton buttonForecast = findViewById(R.id.button_forecast);
+
+        Transition transition = new Slide(Gravity.BOTTOM);
+        transition.setDuration(600);
+        transition.addTarget(R.id.hidden_forecast_layout);
+
+        TransitionManager.beginDelayedTransition(parent, transition);
+        redLayout.setVisibility(showWeeklyForecast ? View.VISIBLE : View.GONE);
+        buttonForecast.setText(showWeeklyForecast ? "Hide weekly Forecast" : "Show weekly Forecast");
+        showWeeklyForecast = !showWeeklyForecast;
+    }
+
+    private void updateUI(WeatherDetails weatherDetails) {
+        setWeatherDetailsUI(weatherDetails);
+
+        hourlyTempChart = findViewById(R.id.hourly_temp_chart);
+        List<Hourly> hourlyData = weatherDetails.getHourly();
+        ArrayList<String> xLabelHour = new ArrayList<>();
+        ArrayList<Entry> yAxisValHour = new ArrayList<>();
+        int i = 0;
+        for (Hourly hour : hourlyData) {
+            yAxisValHour.add(new Entry(i, (hour.getTemp()).floatValue()));
+            xLabelHour.add(getHour(hour.getDt()));
+            i++;
+        }
+        setTemperatureChart(xLabelHour, yAxisValHour, null, hourlyTempChart);
+
+        weeklyTempChart = findViewById(R.id.weekly_temp_chart);
+        List<Daily> dailyData = weatherDetails.getDaily();
+        ArrayList<String> xLabelWeek = new ArrayList<>();
+        ArrayList<Entry> yaxisValMin = new ArrayList<>();
+        ArrayList<Entry> yaxisValMax = new ArrayList<>();
+        i = 0;
+        for (Daily daily : dailyData) {
+            yaxisValMin.add(new Entry(i, (daily.getTemp().getMin()).floatValue()));
+            yaxisValMax.add(new Entry(i, (daily.getTemp().getMax()).floatValue()));
+            xLabelWeek.add(getDay(daily.getDt()));
+            i++;
+        }
+        setTemperatureChart(xLabelWeek, yaxisValMin, yaxisValMax, weeklyTempChart);
+
+    }
+
+    private void setWeatherDetailsUI(WeatherDetails weatherDetails) {
+
+    }
+
+
+    private void setTemperatureChart(ArrayList<String> xLabel, ArrayList<Entry> yAxisVal,
+                                     ArrayList<Entry> yAxisVal2, LineChart tempLineChart) {
+
+        LineDataSet lineDataSet = new LineDataSet(yAxisVal, "Temp");
+        lineDataSet.setColor(Color.GRAY);
+        lineDataSet.setDrawCircles(false);
+        lineDataSet.setDrawFilled(false);
+        lineDataSet.setDrawValues(true);
+        lineDataSet.setValueTextSize(13f);
+        lineDataSet.setLineWidth(2.5f);
+        lineDataSet.setValueTextColor(Color.WHITE);
+        lineDataSet.setCubicIntensity(0.2f);
+        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+
+        ArrayList<ILineDataSet> sets = new ArrayList<>();
+        sets.add(lineDataSet);
+
+
+        if (yAxisVal2 != null) {
+            LineDataSet lineDataSet2 = new LineDataSet(yAxisVal2, "Max Temp");
+            lineDataSet2.setColor(Color.GRAY);
+            lineDataSet2.setDrawCircles(false);
+            lineDataSet2.setDrawFilled(false);
+            lineDataSet2.setDrawValues(true);
+            lineDataSet2.setValueTextSize(13f);
+            lineDataSet2.setLineWidth(2.5f);
+            lineDataSet2.setValueTextColor(Color.WHITE);
+            lineDataSet2.setCubicIntensity(0.2f);
+            lineDataSet2.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+            sets.add(lineDataSet2);
+        }
+
+        LineData data = new LineData(sets);
+        data.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getPointLabel(Entry entry) {
+                return String.format(Locale.US, "%.1f", entry.getY()) + "\u00B0";
+            }
+        });
+
+        tempLineChart.setDescription(null);
+        tempLineChart.setData(data);
+        tempLineChart.setDoubleTapToZoomEnabled(false);
+        tempLineChart.setPinchZoom(false);
+        tempLineChart.disableScroll();
+        tempLineChart.getAxis(YAxis.AxisDependency.RIGHT).setEnabled(false);
+        tempLineChart.setDescription(null);
+
+        tempLineChart.getAxisLeft().setDrawGridLines(false);
+        tempLineChart.getXAxis().setDrawGridLines(false);
+        tempLineChart.setDrawGridBackground(false);
+        tempLineChart.getAxisRight().setEnabled(false);
+        tempLineChart.getAxisLeft().setEnabled(false);
+
+        tempLineChart.getLegend().setEnabled(false);
+        tempLineChart.setVisibleXRangeMaximum(5F); // allow 6 values
+        tempLineChart.moveViewToX(0F);
+        tempLineChart.getXAxis().setPosition(XAxis.XAxisPosition.TOP);
+        tempLineChart.invalidate();
+        XAxis xAxis = tempLineChart.getXAxis();
+        xAxis.setTextColor(Color.WHITE);
+        xAxis.setDrawAxisLine(false);
+        xAxis.setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(xLabel));
+        xAxis.setGranularity(1f);
+        xAxis.setAvoidFirstLastClipping(true);
+    }
+
+    private String getHour(long time) {
+        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+        cal.setTimeInMillis(time * 1000);
+        return DateFormat.format("HH:mm", cal).toString();
+    }
+
+    private String getDay(long time) {
+        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+        cal.setTimeInMillis(time * 1000);
+        return DateFormat.format("EEE", cal).toString();
     }
 
 }
