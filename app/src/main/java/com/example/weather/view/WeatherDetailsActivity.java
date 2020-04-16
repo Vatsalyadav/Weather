@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,15 +79,19 @@ public class WeatherDetailsActivity extends AppCompatActivity {
     }
 
     private void fetchLocation() {
-        mWeatherDetailsActivityViewModel.setLocationDetails();
-        mWeatherDetailsActivityViewModel.getLocationDetails().observe(this, new Observer<Location>() {
-            @Override
-            public void onChanged(@Nullable Location location) {
-                Log.e(TAG, "onChanged: " + location.getLatitude() + "  " + location.getLongitude());
-                if (location.getLatitude() != 0.0 && location.getLongitude() != 0)
-                    fetchWeatherData();
-            }
-        });
+        try {
+            mWeatherDetailsActivityViewModel.setLocationDetails();
+            mWeatherDetailsActivityViewModel.getLocationDetails().observe(this, new Observer<Location>() {
+                @Override
+                public void onChanged(@Nullable Location location) {
+                    Log.e(TAG, "onChanged: " + location.getLatitude() + "  " + location.getLongitude());
+                    if (location.getLatitude() != 0.0 && location.getLongitude() != 0)
+                        fetchWeatherData();
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(this, "Unable to get Weather Data, please try again later.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private Boolean showWeeklyForecast = true;
@@ -107,10 +112,19 @@ public class WeatherDetailsActivity extends AppCompatActivity {
         switch (requestCode) {
             case 1000: {
                 // If request is cancelled, the result arrays are empty.
+                MaterialButton weeklyForecast = findViewById(R.id.button_forecast);
+                LinearLayout parentLayout = findViewById(R.id.weather_details_parent);
+                TextView permissionDeniedText = findViewById(R.id.permission_denied);
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     fetchLocation();
+                    weeklyForecast.setVisibility(View.VISIBLE);
+                    parentLayout.setVisibility(View.VISIBLE);
+                    permissionDeniedText.setVisibility(View.GONE);
                 } else {
+                    weeklyForecast.setVisibility(View.GONE);
+                    parentLayout.setVisibility(View.GONE);
+                    permissionDeniedText.setVisibility(View.VISIBLE);
                     Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
                 }
                 break;
@@ -125,26 +139,41 @@ public class WeatherDetailsActivity extends AppCompatActivity {
         mWeatherDetailsActivityViewModel.getWeatherDetails().observe(this, new Observer<WeatherDetails>() {
             @Override
             public void onChanged(@Nullable WeatherDetails weatherDetails) {
+                MaterialButton retryButton = findViewById(R.id.retry);
+                LinearLayout parentLayout = findViewById(R.id.weather_details_parent);
+                MaterialButton weeklyForecast = findViewById(R.id.button_forecast);
                 if (weatherDetails.getResponseState()) {
+                    retryButton.setVisibility(View.GONE);
+                    parentLayout.setVisibility(View.VISIBLE);
+                    weeklyForecast.setVisibility(View.VISIBLE);
                     updateUI(weatherDetails);
+                } else {
+                    weeklyForecast.setVisibility(View.GONE);
+                    retryButton.setVisibility(View.VISIBLE);
+                    parentLayout.setVisibility(View.GONE);
+                    Toast.makeText(WeatherDetailsActivity.this, "Unable to get Weather Data, Please press Retry Button.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
     public void weeklyForecast(View view) {
-        View redLayout = findViewById(R.id.hidden_forecast_layout);
-        ViewGroup parent = findViewById(R.id.parent_layout_picture_details);
-        MaterialButton buttonForecast = findViewById(R.id.button_forecast);
+        try {
+            View redLayout = findViewById(R.id.hidden_forecast_layout);
+            ViewGroup parent = findViewById(R.id.parent_layout_weather_details);
+            MaterialButton buttonForecast = findViewById(R.id.button_forecast);
 
-        Transition transition = new Slide(Gravity.BOTTOM);
-        transition.setDuration(600);
-        transition.addTarget(R.id.hidden_forecast_layout);
+            Transition transition = new Slide(Gravity.BOTTOM);
+            transition.setDuration(600);
+            transition.addTarget(R.id.hidden_forecast_layout);
 
-        TransitionManager.beginDelayedTransition(parent, transition);
-        redLayout.setVisibility(showWeeklyForecast ? View.VISIBLE : View.GONE);
-        buttonForecast.setText(showWeeklyForecast ? "Hide weekly Forecast" : "Show weekly Forecast");
-        showWeeklyForecast = !showWeeklyForecast;
+            TransitionManager.beginDelayedTransition(parent, transition);
+            redLayout.setVisibility(showWeeklyForecast ? View.VISIBLE : View.GONE);
+            buttonForecast.setText(showWeeklyForecast ? "Hide weekly Forecast" : "Show weekly Forecast");
+            showWeeklyForecast = !showWeeklyForecast;
+        } catch (Exception e) {
+            Toast.makeText(this, "Unable to show Weekly Forecast, please try again later.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void updateUI(WeatherDetails weatherDetails) {
@@ -291,4 +320,7 @@ public class WeatherDetailsActivity extends AppCompatActivity {
         return DateFormat.format(dateFormat, cal).toString();
     }
 
+    public void retry(View view) {
+        fetchWeatherData();
+    }
 }

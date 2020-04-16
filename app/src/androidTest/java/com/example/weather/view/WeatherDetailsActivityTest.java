@@ -220,23 +220,21 @@ public class WeatherDetailsActivityTest {
                 allOf(withId(R.id.button_forecast), withText("Show Weekly Forecast"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.parent_layout_picture_details),
-                                        4),
+                                        withId(R.id.parent_layout_weather_details),
+                                        6),
                                 0),
                         isDisplayed()));
         materialButton.perform(click());
-
 
         ViewInteraction materialButton2 = onView(
                 allOf(withId(R.id.button_forecast), withText("Hide weekly Forecast"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.parent_layout_picture_details),
-                                        4),
+                                        withId(R.id.parent_layout_weather_details),
+                                        6),
                                 0),
                         isDisplayed()));
         materialButton2.perform(click());
-
     }
 
 }

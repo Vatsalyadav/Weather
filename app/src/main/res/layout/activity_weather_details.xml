@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/parent_layout_picture_details"
+    android:id="@+id/parent_layout_weather_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black"
@@ -35,6 +35,7 @@
             android:orientation="vertical"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
+            android:id="@+id/weather_details_parent"
             android:paddingBottom="8dp">
 
             <TextView
@@ -441,6 +442,31 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <TextView
+        android:id="@+id/permission_denied"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="2dp"
+        android:text="@string/weather_permission_denied"
+        android:textColor="@android:color/white"
+        android:visibility="invisible" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/retry"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
+        android:layout_margin="4dp"
+        android:onClick="retry"
+        android:padding="4dp"
+        android:text="@string/retry"
+        android:visibility="gone"
+        app:cornerRadius="0dp"
+        app:iconPadding="8dp"
+        app:rippleColor="@color/colorAccent" />
 
     <LinearLayout
         android:id="@+id/hidden_forecast_layout"

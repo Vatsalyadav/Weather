@@ -12,4 +12,6 @@
     <string name="wind_speed">Wind Speed</string>
     <string name="hourly_forecast">Hourly Forecast</string>
     <string name="loading">Loading</string>
+    <string name="weather_permission_denied">Please grant Location Permissions to fetch Weather Data</string>
+    <string name="retry">Retry</string>
 </resources>
